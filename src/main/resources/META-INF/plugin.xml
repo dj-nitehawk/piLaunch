@@ -1,5 +1,6 @@
 <idea-plugin>
     <id>dev.pilaunch</id>
+    <vendor>piLaunch</vendor>
 
     <description><![CDATA[
         <b>piLaunch</b> starts Pi in a pinned editor tab when the IDE opens a project.
@@ -12,4 +13,21 @@
         <fileEditorProvider implementation="dev.pilaunch.PiSessionEditorProvider"/>
         <postStartupActivity implementation="dev.pilaunch.OpenPiOnStartupActivity"/>
     </extensions>
+
+    <actions>
+        <action
+            id="dev.pilaunch.SendCurrentFilePathToPi"
+            class="dev.pilaunch.SendCurrentFilePathToPiAction"
+            text="Send Current File Path to Pi"
+            description="Send the current editor file path to the Pi tab prompt">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt P"/>
+        </action>
+        <action
+            id="dev.pilaunch.SendCurrentFileLocationToPi"
+            class="dev.pilaunch.SendCurrentFileLocationToPiAction"
+            text="Send Current File Location to Pi"
+            description="Send the current file path and line selection to the Pi tab prompt">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt L"/>
+        </action>
+    </actions>
 </idea-plugin>

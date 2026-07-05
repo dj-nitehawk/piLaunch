@@ -1,6 +1,8 @@
 package dev.pilaunch
 
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.ide.CopyPasteManager
+import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorPolicy
 import com.intellij.openapi.fileEditor.FileEditorProvider
@@ -16,6 +18,7 @@ import com.intellij.terminal.ui.TerminalWidget
 import org.jetbrains.plugins.terminal.LocalTerminalDirectRunner
 import org.jetbrains.plugins.terminal.ShellStartupOptions
 import java.awt.BorderLayout
+import java.awt.datatransfer.StringSelection
 import java.beans.PropertyChangeListener
 import javax.swing.Icon
 import javax.swing.JComponent
@@ -74,6 +77,10 @@ class PiSessionEditor(
 
     override fun getPreferredFocusedComponent(): JComponent? = view.preferredFocusComponent()
 
+    fun pasteTextToPrompt(text: String) {
+        view.pasteTextToPrompt(text)
+    }
+
     override fun getName(): String = PI_TAB_NAME
 
     override fun setState(state: FileEditorState) {}
@@ -94,7 +101,7 @@ class PiSessionEditor(
 }
 
 private class PiSessionView(
-    project: Project,
+    private val project: Project,
     file: PiSessionFile,
     parent: Disposable,
 ) {
@@ -105,6 +112,15 @@ private class PiSessionView(
     }
 
     fun preferredFocusComponent(): JComponent? = widget.preferredFocusableComponent
+
+    fun pasteTextToPrompt(text: String) {
+        CopyPasteManager.getInstance().setContents(StringSelection(text))
+
+        val focusComponent = preferredFocusComponent() ?: widget.component
+        IdeFocusManager.getInstance(project).requestFocus(focusComponent, true)
+
+        widget.ttyConnector?.write(text)
+    }
 }
 
 private object PiLauncher {

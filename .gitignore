@@ -94,3 +94,5 @@ $RECYCLE.BIN/
 local.properties
 
 .serena/
+
+.gradle-user-home/

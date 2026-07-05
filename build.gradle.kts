@@ -12,7 +12,9 @@ version = providers.gradleProperty("pluginVersion").get()
 
 dependencies {
     intellijPlatform {
-        intellijIdea(providers.gradleProperty("platformVersion").get())
+        rider(providers.gradleProperty("platformVersion")) {
+            useInstaller = false
+        }
         bundledPlugin("org.jetbrains.plugins.terminal")
     }
 }
@@ -42,7 +44,7 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            recommended()
+            create("RD", providers.gradleProperty("platformVersion"))
         }
     }
 }
