@@ -25,8 +25,16 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 import com.intellij.testFramework.LightVirtualFile
 
-private const val PI_COMMAND = "clear && pi"
 private const val PI_TAB_NAME = "Pi"
+
+private fun buildPiCommand(endpoint: PiAttentionNotificationBridge.Endpoint, extensionPath: String): String =
+    "clear && " +
+        "PI_LAUNCH_NOTIFY_URL=${shellQuote(endpoint.url)} " +
+        "PI_LAUNCH_NOTIFY_TOKEN=${shellQuote(endpoint.token)} " +
+        "pi -e ${shellQuote(extensionPath)}"
+
+private fun shellQuote(value: String): String =
+    "'" + value.replace("'", "'\"'\"'") + "'"
 
 class PiSessionFile(
     val workingDirectory: String?,
@@ -130,7 +138,11 @@ private object PiLauncher {
             .workingDirectory(workingDirectory)
             .build()
         val widget = PiTerminalRunner(project).startShellTerminalWidget(parent, options, true)
-        widget.sendCommandToExecute(PI_COMMAND)
+
+        val endpoint = PiAttentionNotificationBridge.getInstance(project).start(parent)
+        val extensionPath = PiExtensionInstaller.attentionExtensionPath().toString()
+        widget.sendCommandToExecute(buildPiCommand(endpoint, extensionPath))
+
         return widget
     }
 }
