@@ -131,8 +131,13 @@ class PiAttentionNotificationBridge(private val project: Project) : Disposable {
         notifications.forEach { it.expire() }
     }
 
-    private fun isPiSessionSelected(): Boolean =
-        FileEditorManager.getInstance(project).selectedFiles.any { it is PiSessionFile }
+    private fun isPiSessionSelected(): Boolean {
+        val fileEditorManager = FileEditorManager.getInstance(project)
+        val selectedFiles = fileEditorManager.selectedFiles
+        if (selectedFiles.any { it is PiSessionFile }) return true
+
+        return selectedFiles.isEmpty() && fileEditorManager.openFiles.singleOrNull() is PiSessionFile
+    }
 
     private fun stop() {
         server?.stop(0)

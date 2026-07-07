@@ -29,6 +29,7 @@ tags: [operations, runtime, release]
 - User-visible notification title: `Pi needs attention`.
 - Notification type: information balloon.
 - Notifications are suppressed while the Pi tab is selected.
+- If IntelliJ reports no selected files during pi-only startup, the bridge treats a sole open Pi tab as selected for suppression.
 - Active notifications expire when the Pi tab is selected again.
 - Notification creation is debounced for 1 second.
 

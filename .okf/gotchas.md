@@ -11,6 +11,7 @@ tags: [gotchas, constraints]
 - The Terminal plugin is both a Gradle bundled plugin dependency and a `plugin.xml` dependency; keep both aligned.
 - CI uses `--no-configuration-cache --no-parallel` to avoid intermittent IntelliJ Platform dependency resolution failures on GitHub runners. Do not remove casually.
 - Startup intentionally opens the Pi tab without selecting it; send actions intentionally select/focus it.
+- During pi-only startup, `FileEditorManager.selectedFiles` can be empty even though the Pi tab is the only visible editor; notification suppression must handle that fallback.
 - Alt+L line numbers are 1-based even though IntelliJ editor positions are 0-based.
 - Send actions intentionally mutate the IDE clipboard and leave sent text there.
 - The attention bridge must stay loopback-only and token-protected; do not expose it on external interfaces.
