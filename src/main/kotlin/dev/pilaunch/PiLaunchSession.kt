@@ -14,6 +14,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.terminal.JBTerminalWidget
 import com.intellij.terminal.ui.TerminalWidget
 import org.jetbrains.plugins.terminal.LocalTerminalDirectRunner
 import org.jetbrains.plugins.terminal.ShellStartupOptions
@@ -138,6 +139,7 @@ private object PiLauncher {
             .workingDirectory(workingDirectory)
             .build()
         val widget = PiTerminalRunner(project).startShellTerminalWidget(parent, options, true)
+        JBTerminalWidget.asJediTermWidget(widget)?.let { PiTerminalFileLinkHandler.install(project, workingDirectory, it, parent) }
 
         val endpoint = PiAttentionNotificationBridge.getInstance(project).start(parent)
         val extensionPath = PiExtensionInstaller.attentionExtensionPath().toString()

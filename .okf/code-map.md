@@ -31,6 +31,7 @@ tags: [code-map, navigation]
 | `OpenPiOnStartupActivity.kt` | Project startup tab opening/pinning. |
 | `PiLaunchSession.kt` | `PiSessionFile`, file type, editor provider/editor/view, Terminal runner, command launch. |
 | `PiAttentionNotificationBridge.kt` | Project service for localhost bridge and IDE notifications. |
+| `PiTerminalFileLinkHandler.kt` | Terminal hover/click handler that opens existing project-relative paths with optional start line without changing terminal text styling. |
 | `PiExtensionInstaller.kt` | Resolves bundled attention extension resource path. |
 | `PiLaunchActions.kt` | Alt+P/Alt+L action formatting and terminal writing. |
 

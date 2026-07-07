@@ -13,6 +13,9 @@ tags: [gotchas, constraints]
 - Startup intentionally opens the Pi tab without selecting it; send actions intentionally select/focus it.
 - During pi-only startup, `FileEditorManager.selectedFiles` can be empty even though the Pi tab is the only visible editor; notification suppression must handle that fallback.
 - Alt+L line numbers are 1-based even though IntelliJ editor positions are 0-based.
+- Terminal file link handling uses 1-based input line numbers but navigates with IntelliJ's 0-based `OpenFileDescriptor` line index.
+- Terminal file link handling intentionally ignores non-existing files and paths outside the Pi terminal working directory.
+- JetBrains terminal message-filter hyperlinks repaint link styling and can force an ugly fixed background on colored Pi blocks; piLaunch uses hover/click handling instead.
 - Send actions intentionally mutate the IDE clipboard and leave sent text there.
 - The attention bridge must stay loopback-only and token-protected; do not expose it on external interfaces.
 - The bundled Pi extension must catch notification failures; Pi should continue if the IDE bridge is gone.

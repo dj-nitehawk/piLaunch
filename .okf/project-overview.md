@@ -18,6 +18,7 @@ Current plugin behavior:
 - Opens/reuses a pinned **Pi** editor tab when a project opens.
 - Starts a terminal session in the project base path and runs `pi` with a bundled Pi extension.
 - Uses a loopback-only notification bridge so Pi can notify the IDE after `agent_end`.
+- Opens existing project-relative terminal output paths such as `src/file.ext` and `src/file.ext:10` from hover/click handling without repainting them as terminal hyperlinks.
 - Shows `Pi needs attention` IDE and system notifications when Pi finishes work and either the Pi tab is not selected or the Rider window is inactive.
 - Dismisses active Pi attention IDE notifications when the Pi tab becomes selected or Rider is reactivated with Pi selected.
 - Provides actions/hotkeys to send the current file path or file location to the Pi prompt.
@@ -29,7 +30,7 @@ Current plugin behavior:
 
 ## Maturity/status
 
-- Plugin version: `1.2.0` in `gradle.properties`.
+- Plugin version: `1.3.0` in `gradle.properties`.
 - Targets IntelliJ Platform/Rider `2026.1.3` with since-build `261`.
 - CI and release workflows are manual (`workflow_dispatch`).
 

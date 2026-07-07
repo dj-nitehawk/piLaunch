@@ -28,6 +28,9 @@ tags: [conventions, kotlin, intellij]
 - Use the project base path as terminal working directory when available.
 - Quote shell values with the existing `shellQuote` helper when constructing the `pi -e` command.
 - Keep the attention extension loaded through `PiExtensionInstaller.attentionExtensionPath()`.
+- Install Pi terminal file link hover/click handling through the underlying `JBTerminalWidget` when the `TerminalWidget` facade lacks the needed terminal panel access.
+- Resolve terminal file links relative to the Pi terminal working directory and only navigate to regular files under that directory.
+- Do not use terminal message-filter hyperlink rendering for Pi file links because it repaints link backgrounds instead of preserving Pi block backgrounds.
 
 ## Notifications and bridge
 

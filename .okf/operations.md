@@ -13,6 +13,7 @@ tags: [operations, runtime, release]
 - Each Pi tab hosts a JetBrains Terminal widget.
 - The terminal command clears the terminal, exports notification bridge environment variables, and runs `pi -e <attention-extension>`.
 - The terminal working directory is the project base path when available.
+- Terminal output paths matching existing project-relative files, with optional `:line`, are clickable and navigate to the file or start line.
 
 ## Attention bridge
 

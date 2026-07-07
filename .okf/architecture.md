@@ -17,7 +17,8 @@ Single-module Kotlin JetBrains plugin. The IDE hosts all plugin code; Pi runs in
 | --- | --- | --- |
 | Startup activity | `OpenPiOnStartupActivity.kt` | Opens/reuses and pins the Pi editor tab after project startup without selecting it. |
 | Session virtual file/editor | `PiLaunchSession.kt` | Defines `PiSessionFile`, file type, editor provider, editor view, and terminal launch path. |
-| Terminal launcher | `PiLaunchSession.kt` | Starts shell terminal with project base path, starts notification bridge, and executes `pi -e <extension>`. |
+| Terminal launcher | `PiLaunchSession.kt` | Starts shell terminal with project base path, starts notification bridge, installs hover/click file-link handling, and executes `pi -e <extension>`. |
+| Terminal file-link handler | `PiTerminalFileLinkHandler.kt` | Detects existing project-relative output paths with optional start line under the mouse and navigates Rider to the file/location when clicked without changing terminal text styling. |
 | Attention bridge | `PiAttentionNotificationBridge.kt` | Project service hosting a loopback HTTP endpoint for Pi completion events and IDE notifications. |
 | Send actions | `PiLaunchActions.kt` | Implements Alt+P/Alt+L actions that focus the Pi tab and write context text to the terminal. |
 | Bundled Pi extension | `src/main/resources/pi/pilaunch-attention.ts` | Listens for Pi `agent_end` and POSTs to the IDE bridge. |
@@ -30,8 +31,9 @@ Single-module Kotlin JetBrains plugin. The IDE hosts all plugin code; Pi runs in
 3. `PiSessionEditor` creates `PiSessionView`.
 4. `PiLauncher.launch` starts a Terminal widget with `workingDirectory = project.basePath`.
 5. `PiAttentionNotificationBridge.start` creates/reuses a loopback HTTP `/notify` endpoint with a random per-session token.
-6. Launcher sends `clear && PI_LAUNCH_NOTIFY_URL=... PI_LAUNCH_NOTIFY_TOKEN=... pi -e <bundled-extension>` to the terminal.
-7. The bundled Pi extension sends a POST on `agent_end`; the bridge creates an IDE `Pi needs attention` notification and requests a native system notification unless the Pi tab is selected in an active Rider window.
+6. Launcher installs `PiTerminalFileLinkHandler` on the underlying `JBTerminalWidget` so matching terminal output paths get hand-cursor/tool-tip hover handling and navigate on click without rewriting terminal output styles.
+7. Launcher sends `clear && PI_LAUNCH_NOTIFY_URL=... PI_LAUNCH_NOTIFY_TOKEN=... pi -e <bundled-extension>` to the terminal.
+8. The bundled Pi extension sends a POST on `agent_end`; the bridge creates an IDE `Pi needs attention` notification and requests a native system notification unless the Pi tab is selected in an active Rider window.
 
 ## Dependency rules
 
@@ -60,6 +62,7 @@ Single-module Kotlin JetBrains plugin. The IDE hosts all plugin code; Pi runs in
 - Dismiss active IDE bubbles when Pi is selected or Rider is reactivated with Pi selected.
 - Do not replace the loopback/token bridge with a wider network listener.
 - Keep Terminal plugin dependency registered in `plugin.xml` and Gradle.
+- Terminal file link hover/click handling resolves only to regular files under the project working directory and does not repaint terminal output as hyperlinks.
 
 ## Sources
 
@@ -67,6 +70,7 @@ Single-module Kotlin JetBrains plugin. The IDE hosts all plugin code; Pi runs in
 - `src/main/kotlin/dev/pilaunch/OpenPiOnStartupActivity.kt`
 - `src/main/kotlin/dev/pilaunch/PiLaunchSession.kt`
 - `src/main/kotlin/dev/pilaunch/PiAttentionNotificationBridge.kt`
+- `src/main/kotlin/dev/pilaunch/PiTerminalFileLinkHandler.kt`
 - `src/main/kotlin/dev/pilaunch/PiLaunchActions.kt`
 - `src/main/resources/pi/pilaunch-attention.ts`
 - `src/main/resources/META-INF/plugin.xml`
