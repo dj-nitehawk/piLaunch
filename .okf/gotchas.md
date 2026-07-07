@@ -17,6 +17,7 @@ tags: [gotchas, constraints]
 - The attention bridge must stay loopback-only and token-protected; do not expose it on external interfaces.
 - The bundled Pi extension must catch notification failures; Pi should continue if the IDE bridge is gone.
 - Native system notification display depends on OS permissions and IDE notification settings; active expiration only controls IDE bubbles.
+- Pi-selected suppression only applies while the Rider project window is active; inactive Rider windows still produce attention notifications.
 - No automated tests currently exist, so UI/terminal changes need Gradle validation plus manual `runIde` checks when practical.
 - Ignored/generated directories (`build/`, `.gradle/`, `.kotlin/`, `.intellijPlatform/`, IDE metadata) are not source of truth and should not be hand-edited.
 

@@ -4,6 +4,7 @@ import com.intellij.notification.Notification
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
@@ -12,6 +13,8 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.wm.IdeFrame
+import com.intellij.openapi.wm.WindowManager
 import com.intellij.ui.SystemNotifications
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
@@ -37,6 +40,16 @@ class PiAttentionNotificationBridge(private val project: Project) : Disposable {
             object : FileEditorManagerListener {
                 override fun selectionChanged(event: FileEditorManagerEvent) {
                     if (event.newFile is PiSessionFile) {
+                        expireAttentionNotifications()
+                    }
+                }
+            },
+        )
+        ApplicationManager.getApplication().messageBus.connect(this).subscribe(
+            ApplicationActivationListener.TOPIC,
+            object : ApplicationActivationListener {
+                override fun applicationActivated(ideFrame: IdeFrame) {
+                    if (ideFrame.project == project && isPiSessionSelected()) {
                         expireAttentionNotifications()
                     }
                 }
@@ -111,7 +124,7 @@ class PiAttentionNotificationBridge(private val project: Project) : Disposable {
 
     private fun showAttentionNotification() {
         ApplicationManager.getApplication().invokeLater {
-            if (project.isDisposed || isPiSessionSelected()) return@invokeLater
+            if (project.isDisposed || (isPiSessionSelected() && isProjectWindowActive())) return@invokeLater
 
             val now = System.currentTimeMillis()
             if (now - lastNotificationAt < NOTIFICATION_DEBOUNCE_MILLIS) return@invokeLater
@@ -144,6 +157,8 @@ class PiAttentionNotificationBridge(private val project: Project) : Disposable {
 
         return selectedFiles.isEmpty() && fileEditorManager.openFiles.singleOrNull() is PiSessionFile
     }
+
+    private fun isProjectWindowActive(): Boolean = WindowManager.getInstance().getFrame(project)?.isActive == true
 
     private fun stop() {
         server?.stop(0)

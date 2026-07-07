@@ -31,7 +31,7 @@ Single-module Kotlin JetBrains plugin. The IDE hosts all plugin code; Pi runs in
 4. `PiLauncher.launch` starts a Terminal widget with `workingDirectory = project.basePath`.
 5. `PiAttentionNotificationBridge.start` creates/reuses a loopback HTTP `/notify` endpoint with a random per-session token.
 6. Launcher sends `clear && PI_LAUNCH_NOTIFY_URL=... PI_LAUNCH_NOTIFY_TOKEN=... pi -e <bundled-extension>` to the terminal.
-7. The bundled Pi extension sends a POST on `agent_end`; the bridge creates an IDE `Pi needs attention` notification and requests a native system notification unless the Pi tab is selected.
+7. The bundled Pi extension sends a POST on `agent_end`; the bridge creates an IDE `Pi needs attention` notification and requests a native system notification unless the Pi tab is selected in an active Rider window.
 
 ## Dependency rules
 
@@ -56,7 +56,8 @@ Single-module Kotlin JetBrains plugin. The IDE hosts all plugin code; Pi runs in
 
 - The editor tab name remains `Pi` and should be pinned/non-preview when opened.
 - Startup opens the Pi tab without selecting/focusing it; send actions select and focus it.
-- Suppress attention notifications while the Pi tab is selected and dismiss active IDE bubbles when selected.
+- Suppress attention notifications while the Pi tab is selected in an active Rider window; still notify if the Rider window is inactive.
+- Dismiss active IDE bubbles when Pi is selected or Rider is reactivated with Pi selected.
 - Do not replace the loopback/token bridge with a wider network listener.
 - Keep Terminal plugin dependency registered in `plugin.xml` and Gradle.
 

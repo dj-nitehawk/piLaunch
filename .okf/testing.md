@@ -44,8 +44,9 @@ When practical after UI/runtime changes, use `./gradlew runIde` and verify:
 - `pi` starts in the project base path.
 - Alt+P sends the current file path.
 - Alt+L sends correct 1-based line or selection text.
-- Attention IDE bubble and native system notification appear after Pi `agent_end` only when Pi tab is not selected.
-- Active IDE bubbles expire when selecting the Pi tab; native system notification lifetime is OS-controlled.
+- Attention IDE bubble and native system notification appear after Pi `agent_end` when the Pi tab is not selected, or when Rider is inactive even if Pi is selected.
+- Notifications are suppressed when Pi is selected and the Rider project window is active.
+- Active IDE bubbles expire when selecting the Pi tab or reactivating Rider with Pi selected; native system notification lifetime is OS-controlled.
 
 ## Sources
 

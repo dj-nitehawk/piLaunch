@@ -18,8 +18,8 @@ Current plugin behavior:
 - Opens/reuses a pinned **Pi** editor tab when a project opens.
 - Starts a terminal session in the project base path and runs `pi` with a bundled Pi extension.
 - Uses a loopback-only notification bridge so Pi can notify the IDE after `agent_end`.
-- Shows `Pi needs attention` IDE and system notifications when Pi finishes work and the Pi tab is not selected.
-- Dismisses active Pi attention IDE notifications when the Pi tab becomes selected.
+- Shows `Pi needs attention` IDE and system notifications when Pi finishes work and either the Pi tab is not selected or the Rider window is inactive.
+- Dismisses active Pi attention IDE notifications when the Pi tab becomes selected or Rider is reactivated with Pi selected.
 - Provides actions/hotkeys to send the current file path or file location to the Pi prompt.
 
 ## Users and consumers
