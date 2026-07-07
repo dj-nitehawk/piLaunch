@@ -12,6 +12,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
+import com.intellij.ui.SystemNotifications
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
 import java.net.InetAddress
@@ -118,10 +119,15 @@ class PiAttentionNotificationBridge(private val project: Project) : Disposable {
 
             val notification = NotificationGroupManager.getInstance()
                 .getNotificationGroup(NOTIFICATION_GROUP_ID)
-                .createNotification("Pi needs attention", NotificationType.INFORMATION)
+                .createNotification(ATTENTION_NOTIFICATION_TITLE, NotificationType.INFORMATION)
 
             activeNotifications += notification
             notification.notify(project)
+            SystemNotifications.getInstance().notify(
+                NOTIFICATION_GROUP_ID,
+                ATTENTION_NOTIFICATION_TITLE,
+                "Pi finished work in ${project.name}.",
+            )
         }
     }
 
@@ -159,6 +165,7 @@ class PiAttentionNotificationBridge(private val project: Project) : Disposable {
 
     companion object {
         private const val NOTIFICATION_GROUP_ID = "piLaunch"
+        private const val ATTENTION_NOTIFICATION_TITLE = "Pi needs attention"
         private const val NOTIFICATION_DEBOUNCE_MILLIS = 1_000L
 
         fun getInstance(project: Project): PiAttentionNotificationBridge = project.service()

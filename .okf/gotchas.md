@@ -16,6 +16,7 @@ tags: [gotchas, constraints]
 - Send actions intentionally mutate the IDE clipboard and leave sent text there.
 - The attention bridge must stay loopback-only and token-protected; do not expose it on external interfaces.
 - The bundled Pi extension must catch notification failures; Pi should continue if the IDE bridge is gone.
+- Native system notification display depends on OS permissions and IDE notification settings; active expiration only controls IDE bubbles.
 - No automated tests currently exist, so UI/terminal changes need Gradle validation plus manual `runIde` checks when practical.
 - Ignored/generated directories (`build/`, `.gradle/`, `.kotlin/`, `.intellijPlatform/`, IDE metadata) are not source of truth and should not be hand-edited.
 

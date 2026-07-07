@@ -27,10 +27,11 @@ tags: [operations, runtime, release]
 
 - Notification group id: `piLaunch`.
 - User-visible notification title: `Pi needs attention`.
-- Notification type: information balloon.
+- IDE notification type: information balloon.
+- Accepted events also request a native system notification with body text `Pi finished work in <project name>.` when supported by the OS and IDE notification settings.
 - Notifications are suppressed while the Pi tab is selected.
 - If IntelliJ reports no selected files during pi-only startup, the bridge treats a sole open Pi tab as selected for suppression.
-- Active notifications expire when the Pi tab is selected again.
+- Active IDE bubble notifications expire when the Pi tab is selected again; native system notification lifetime is controlled by the OS.
 - Notification creation is debounced for 1 second.
 
 ## Configuration and environment variables

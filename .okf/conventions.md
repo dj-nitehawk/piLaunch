@@ -32,8 +32,9 @@ tags: [conventions, kotlin, intellij]
 ## Notifications and bridge
 
 - Attention notifications use notification group id `piLaunch` and title `Pi needs attention`.
+- Show both a Rider/IDE information bubble and a native system notification request for accepted attention events.
 - Suppress notifications if the Pi tab is selected.
-- Expire active notifications when the Pi tab becomes selected or the bridge is disposed.
+- Expire active IDE bubble notifications when the Pi tab becomes selected or the bridge is disposed.
 - Keep notification callbacks debounced (`1_000ms` currently) unless behavior changes are intentional and documented.
 
 ## Actions and text formatting

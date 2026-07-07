@@ -16,9 +16,9 @@ The plugin targets Rider/IntelliJ Platform `2026.1` (`since-build 261`) and uses
 - Opens a pinned editor tab named **Pi** when a project opens.
 - Starts Pi in the tab and loads a bundled Pi extension for lifecycle notifications.
 - Uses the project base path as the terminal working directory.
-- Shows a `Pi needs attention` IDE notification when Pi finishes a prompt and returns to idle.
-- Suppresses that notification while the **Pi** tab is selected.
-- Closes active Pi attention notifications when the **Pi** tab is selected again.
+- Shows `Pi needs attention` IDE and system notifications when Pi finishes a prompt and returns to idle.
+- Suppresses those notifications while the **Pi** tab is selected.
+- Closes active Pi attention IDE notifications when the **Pi** tab is selected again.
 - Reuses the plugin's **Pi** tab for send actions.
 - Sends file/path text by copying it to the IDE clipboard, focusing the plugin's **Pi** tab, and pasting into the terminal.
 - The clipboard is left containing the sent text.
@@ -32,7 +32,8 @@ Notifications:
 - Appear after Pi finishes responding, including prompts that do not modify files.
 - Do not appear for manual file edits.
 - Do not appear while the **Pi** tab is currently selected.
-- Are dismissed automatically when the **Pi** tab is selected again.
+- Include a Rider/IDE bubble and a native system notification when supported by the OS and IDE notification settings.
+- Active IDE bubbles are dismissed automatically when the **Pi** tab is selected again; system notification lifetime is controlled by the OS.
 
 The bridge binds only to loopback and requires a random per-session token.
 
