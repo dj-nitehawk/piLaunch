@@ -1,49 +1,70 @@
 ---
 type: Reference
 title: Project Overview
-description: Purpose, scope, capabilities, users, and terms for the piLaunch JetBrains plugin.
-tags: [overview, product]
+description: JetBrains plugin that opens a pinned Pi terminal tab and wires attention notifications plus path hotkeys.
+tags: [overview, layout, architecture]
+resource: README.md
 ---
 
 # Project Overview
 
 ## Purpose
 
-`piLaunch` is a JetBrains IDE plugin that opens a pinned editor tab named **Pi** for the current project and starts the `pi` coding agent inside that tab.
+**piLaunch** (`dev.pilaunch`) is an IntelliJ Platform plugin that opens a pinned editor tab named **Pi**, starts the `pi` CLI in the project base path, and integrates IDE notifications and path-sending actions.
 
 ## Scope
 
-Current plugin behavior:
+- Single Gradle module; Kotlin sources under `src/main/kotlin/dev/pilaunch/`.
+- Targets **Rider** via IntelliJ Platform Gradle (`rider` dependency); platform version and since-build come from `gradle.properties`.
+- Requires bundled **Terminal** plugin and `pi` on `PATH`.
+- MIT licensed. Plugin version currently from `pluginVersion` in `gradle.properties`.
 
-- Opens/reuses a pinned **Pi** editor tab when a project opens.
-- Starts a terminal session in the project base path and runs `pi` with a bundled Pi extension.
-- Uses a loopback-only notification bridge so Pi can notify the IDE after `agent_end`.
-- Opens existing project-relative terminal output paths such as `src/file.ext` and `src/file.ext:10` from hover/click handling without repainting them as terminal hyperlinks.
-- Shows `Pi needs attention` IDE and system notifications when Pi finishes work and either the Pi tab is not selected or the Rider window is inactive.
-- Dismisses active Pi attention IDE notifications when the Pi tab becomes selected or Rider is reactivated with Pi selected.
-- Provides actions/hotkeys to send the current file path or file location to the Pi prompt.
+## Capabilities
 
-## Users and consumers
+| Area | Behavior |
+| --- | --- |
+| Startup | `OpenPiOnStartupActivity` opens/pins a `PiSessionFile` tab without stealing focus |
+| Session | `PiSessionEditor` hosts a local terminal; runs `pi -e <bundled-extension>` with notify env vars |
+| Attention | Bundled `pilaunch-attention.ts` POSTs on `agent_end`; IDE balloon + system notification |
+| Path links | Terminal output paths like `src/file.ext:10` are clickable (project-relative only) |
+| Hotkeys | `Alt+P` path; `Alt+L` path+line/selection formats (see README) |
 
-- JetBrains IDE users, especially Rider/IntelliJ Platform `2026.1` or newer users who want Pi embedded in their IDE.
-- The plugin consumes IntelliJ Platform APIs, the bundled Terminal plugin, and the locally installed `pi` CLI.
+## Layout
 
-## Maturity/status
+| Path | Role |
+| --- | --- |
+| `src/main/kotlin/dev/pilaunch/` | All plugin Kotlin sources |
+| `src/main/resources/META-INF/plugin.xml` | Plugin id, deps, extensions, actions |
+| `src/main/resources/pi/pilaunch-attention.ts` | Bundled Pi extension (copied to IDE system path at runtime) |
+| `src/main/resources/icons/` | Tab/action icons |
+| `build.gradle.kts`, `settings.gradle.kts`, `gradle.properties` | Build, platform, version |
+| `.github/workflows/` | CI build/verify and release |
 
-- Plugin version: `1.3.0` in `gradle.properties`.
-- Targets IntelliJ Platform/Rider `2026.1.3` with since-build `261`.
-- CI and release workflows are manual (`workflow_dispatch`).
+## Architecture (folded)
 
-## Glossary
+- **Style:** IntelliJ plugin; project-level service + editor provider + startup activity + actions.
+- **Components:**
+  - `PiSessionFile` / `PiSessionEditorProvider` / `PiSessionEditor` — virtual file + terminal-backed editor
+  - `PiLauncher` / `PiTerminalRunner` — shell terminal with working directory = project base path
+  - `PiExtensionInstaller` — extracts attention extension to `<IDE system path>/piLaunch/`
+  - `PiAttentionNotificationBridge` — loopback HTTP `/notify` with token; debounce; suppress when Pi tab selected and IDE active
+  - `PiTerminalFileLinkHandler` — mouse hover/click file refs in terminal buffer
+  - `SendToPiAction` subclasses — paste path/location into Pi prompt
+- **Boundaries:** no separate modules; UI/editor lifecycle owns terminal disposable; notify server stops with session dispose.
+- **External:** depends on Terminal plugin APIs; shells out to `pi`; HTTP only to 127.0.0.1.
 
-- **Pi tab**: Pinned editor tab backed by `PiSessionFile`, displayed as `Pi`.
-- **Pi session**: Terminal-backed editor created by `PiSessionEditor`/`PiSessionView`.
-- **Attention bridge**: Project-level localhost HTTP bridge that receives Pi extension callbacks and creates IDE notifications.
-- **Bundled extension**: `src/main/resources/pi/pilaunch-attention.ts`, loaded into Pi with `pi -e`.
+## Status
+
+Productive plugin source with Gradle packaging and GitHub release workflow. No automated tests in-repo.
+
+## Non-goals
+
+- Not a general multi-IDE monorepo or multi-plugin workspace (single artifact).
+- Does not vendor or ship the `pi` binary.
 
 ## Sources
-
 - `README.md`
+- `build.gradle.kts`
 - `gradle.properties`
 - `src/main/resources/META-INF/plugin.xml`
 - `src/main/kotlin/dev/pilaunch/`

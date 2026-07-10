@@ -1,80 +1,59 @@
 ---
 type: Playbook
 title: Workflows
-description: Setup, build, run, verify, release, and local development commands.
-tags: [workflows, gradle, ci]
+description: Setup, build, run sandbox IDE, verify, and release commands for piLaunch.
+tags: [build, ops]
+resource: README.md
 ---
 
 # Workflows
 
-## Prerequisites
-
-- JDK 21.
-- JetBrains IDE based on IntelliJ Platform `2026.1` or newer for runtime use.
-- Bundled JetBrains Terminal plugin enabled.
-- `pi` available on `PATH` for plugin runtime behavior.
-
 ## Setup
 
-Use the checked-in Gradle wrapper:
+- JDK **21** required.
+- Use Gradle wrapper (`./gradlew`); distribution from `gradle/wrapper` (Gradle 9.6.0).
+- `pi` must be on `PATH` for runtime; Terminal plugin must be enabled in the target IDE.
+- Local secrets: use env vars for signing/publish; do not put values in repo (see `.gitignore` for `.env`, `local.properties`).
 
-```bash
-./gradlew --version
-```
+## Build and run
 
-Gradle downloads IntelliJ Platform dependencies through repositories configured in `settings.gradle.kts`.
+| Command | Purpose |
+| --- | --- |
+| `./gradlew runIde` | Sandbox IDE with the plugin |
+| `./gradlew buildPlugin` | Plugin zip under `build/distributions/` |
+| `./gradlew verifyPlugin` | IntelliJ Plugin Verifier (RD / `platformVersion`) |
 
-## Local development
+Gradle properties of note: configuration cache and build cache enabled in `gradle.properties`; CI deliberately passes `--no-configuration-cache --no-parallel` to avoid intermittent platform dependency resolution failures.
 
-```bash
-./gradlew runIde
-```
+## Lint and format
 
-Runs a sandbox IDE with the plugin loaded.
+No dedicated format/lint Gradle tasks documented or configured in-repo. Follow existing Kotlin style in `src/main/kotlin/dev/pilaunch/`.
 
-## Build and package
+## Codegen and migrations
 
-```bash
-./gradlew buildPlugin
-```
+None. Bundled TS extension is a static resource; at runtime it is copied (overwrite) to `<PathManager system path>/piLaunch/pilaunch-attention.ts`.
 
-Produces plugin distributions under `build/distributions/*.zip`.
+## Testing
 
-## Verify plugin compatibility
+No `src/test` or automated test suite present. Validation is manual via `runIde` plus CI `buildPlugin` / `verifyPlugin`.
 
-```bash
-./gradlew verifyPlugin
-```
+## CI
 
-Uses IntelliJ Plugin Verifier against the configured Rider platform version.
+- `.github/workflows/build.yml` — `workflow_dispatch`; JDK 21; `buildPlugin` then `verifyPlugin`.
+- `.github/workflows/release.yml` — `workflow_dispatch` with patch/minor/major; bumps `pluginVersion` in `gradle.properties`; builds zip; commits, tags `v*`, GitHub Release with distribution zip.
 
-## CI workflow
+## Dependencies (folded)
 
-Manual workflow: `.github/workflows/build.yml`.
-
-```bash
-./gradlew --no-configuration-cache --no-parallel buildPlugin
-./gradlew --no-configuration-cache --no-parallel verifyPlugin
-```
-
-The workflow disables configuration cache and parallel execution to avoid intermittent `ClosedFileSystemException` during IntelliJ Platform dependency resolution on GitHub runners.
-
-## Release workflow
-
-Manual workflow: `.github/workflows/release.yml`.
-
-- Input `release_type`: `patch`, `minor`, or `major`.
-- Reads `pluginVersion` from `gradle.properties`.
-- Bumps version, builds plugin, commits `gradle.properties`, tags `v<version>`, pushes to `main`, and creates a GitHub release with `build/distributions/*.zip`.
-- Publishing/signing config in Gradle reads environment variables; do not put secret values in docs or OKF.
-
-## Lint/format/code generation
-
-- No dedicated lint, format, or code-generation command is currently documented or configured beyond standard Gradle/IntelliJ plugin tasks.
-- If adding one, document the command here and in `README.md` if user-facing.
+| Item | Detail |
+| --- | --- |
+| Language/runtime | Kotlin JVM, Java 21 |
+| Build | Gradle wrapper + IntelliJ Platform Gradle Plugin `2.16.0` (`settings.gradle.kts`) |
+| Plugins | `org.jetbrains.kotlin.jvm` `2.4.0`, `org.jetbrains.intellij.platform`, `org.jetbrains.changelog` `2.2.1` |
+| Platform | `rider(platformVersion)` with `useInstaller = false`; bundled `org.jetbrains.plugins.terminal` |
+| Config keys | `pluginGroup`, `pluginName`, `pluginVersion`, `pluginSinceBuild`, `platformVersion` in `gradle.properties` |
+| kotlin.stdlib.default.dependency | `false` (platform-provided) |
 
 ## Sources
-
 - `README.md`
 - `build.gradle.kts`
 - `settings.gradle.kts`
