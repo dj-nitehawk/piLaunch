@@ -16,4 +16,5 @@ Compact operational knowledge for agents. Read relevant files before editing. Ke
 If OKF conflicts with source, tests, generated artifacts, or manifests: verify those, then update OKF.
 
 ## Maintenance
-Before finishing, update OKF when work hits architecture, behavior, commands, deps, tests, deploy, or conventions. If not needed, state why.
+Normative OKF use/update gates: repo canonical agent instructions (`AGENTS.md`). Short update reminder lives in [Gotchas](gotchas.md) (`maintenance.md` absent for Small shape).
+Before finishing, sync OKF when triggers apply; if not needed, state why (`OKF unaffected (non-behavioral edit)` for pure comment/typo/format).

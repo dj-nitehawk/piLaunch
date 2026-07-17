@@ -37,9 +37,9 @@ None. Bundled TS extension is a static resource; at runtime it is copied (overwr
 
 No `src/test` or automated test suite present. Validation is manual via `runIde` plus CI `buildPlugin` / `verifyPlugin`.
 
-## CI
+## CI and release
 
-- `.github/workflows/build.yml` — `workflow_dispatch`; JDK 21; `buildPlugin` then `verifyPlugin`.
+- `.github/workflows/build.yml` — `workflow_dispatch`; JDK 21 Temurin; `buildPlugin` then `verifyPlugin`.
 - `.github/workflows/release.yml` — `workflow_dispatch` with patch/minor/major; bumps `pluginVersion` in `gradle.properties`; builds zip; commits, tags `v*`, GitHub Release with distribution zip.
 
 ## Dependencies (folded)

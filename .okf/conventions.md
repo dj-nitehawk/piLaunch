@@ -32,14 +32,14 @@ tags: [conventions, layout]
 
 - Bundled extension missing → hard `error(...)` in `PiExtensionInstaller`.
 - Notify HTTP: method/token checks; best-effort failures in the TS extension (`catch` empty).
-- File links resolve only under project base path; absolute paths outside project ignored.
+- File links resolve only under project base path; paths outside the base are ignored.
 - Shell args quoted with single-quote + escape for env and `-e` path.
 
 ## Config and secrets
 
 - Build/publish env names only (never commit values): `CERTIFICATE_CHAIN`, `PRIVATE_KEY`, `PRIVATE_KEY_PASSWORD`, `PUBLISH_TOKEN`, `CHANGE_NOTES`.
 - Runtime notify: `PI_LAUNCH_NOTIFY_URL`, `PI_LAUNCH_NOTIFY_TOKEN` injected into the shell command for `pi`.
-- Version/platform knobs live in `gradle.properties` (`pluginVersion`, `platformVersion`, `pluginSinceBuild`).
+- Version/platform knobs live in `gradle.properties` (`pluginGroup`, `pluginName`, `pluginVersion`, `pluginSinceBuild`, `platformVersion`).
 
 ## Sources
 - `src/main/kotlin/dev/pilaunch/`
