@@ -13,9 +13,9 @@ Normative OKF use/update gates live in this file. `.okf/index.md` and the gotcha
 Match OKF depth to blast radius:
 
 - Local/small change: `.okf/index.md` + conventions/gotchas (and workflows if commands/build surface is involved).
-- Cross-cutting, plugin.xml contracts/actions, notify/extension protocol, platform/deps, or new surface: core set — overview, conventions, workflows, gotchas.
+- Cross-cutting, plugin.xml contracts/actions, notify/extension protocol, platform/deps, or new surface: core set (overview, conventions, workflows, gotchas).
 
-OKF guides—it does not replace checking source, tests, or manifests for exact behavior.
+OKF guides. It does not replace checking source, tests, or manifests for exact behavior.
 
 ### During work
 
@@ -32,6 +32,7 @@ If no update needed, state why (pure comment/typo/formatting: `OKF unaffected (n
 Subject to project conventions in OKF/`conventions.md` and this file:
 
 - Focused, minimal changes; prefer existing patterns.
+- Do not use em or en dashes as prose punctuation. Use commas, parentheses, or separate sentences instead. Hyphens remain valid in compound words, bullets, code, commands, CLI flags, identifiers, paths, versions, ranges, quotations, and exact terms.
 - Do not hand-edit generated artifacts (Gradle/`build/` outputs, `.intellijPlatform/` caches); regenerate via project commands instead.
 - Bundled `src/main/resources/pi/pilaunch-attention.ts` is source (edit in place); runtime copy under IDE system path is overwritten on launch.
 - If behavior changes, run the smallest relevant command (`./gradlew buildPlugin`, `verifyPlugin`, or `runIde`). If not run, state the blocker.

@@ -39,8 +39,8 @@ No `src/test` or automated test suite present. Validation is manual via `runIde`
 
 ## CI and release
 
-- `.github/workflows/build.yml` — `workflow_dispatch`; JDK 21 Temurin; `buildPlugin` then `verifyPlugin`.
-- `.github/workflows/release.yml` — `workflow_dispatch` with patch/minor/major; bumps `pluginVersion` in `gradle.properties`; builds zip; commits, tags `v*`, GitHub Release with distribution zip.
+- `.github/workflows/build.yml`: `workflow_dispatch`; JDK 21 Temurin; `buildPlugin` then `verifyPlugin`.
+- `.github/workflows/release.yml`: `workflow_dispatch` with patch/minor/major; bumps `pluginVersion` in `gradle.properties`; builds zip; commits, tags `v*`, GitHub Release with distribution zip.
 
 ## Dependencies (folded)
 

@@ -44,12 +44,12 @@ resource: README.md
 
 - **Style:** IntelliJ plugin; project-level service + editor provider + startup activity + actions.
 - **Components:**
-  - `PiSessionFile` / `PiSessionEditorProvider` / `PiSessionEditor` — virtual file + terminal-backed editor (`PiLaunchSession.kt`)
-  - `PiLauncher` / `PiTerminalRunner` — shell terminal; cwd = project base path
-  - `PiExtensionInstaller` — extracts attention extension to `<IDE system path>/piLaunch/`
-  - `PiAttentionNotificationBridge` — loopback HTTP `/notify` with token; 1s debounce; suppress when Pi tab selected and IDE active
-  - `PiTerminalFileLinkHandler` — hover/click file refs in terminal buffer
-  - `SendToPiAction` subclasses — paste path/location into Pi prompt (`PiLaunchActions.kt`)
+  - `PiSessionFile` / `PiSessionEditorProvider` / `PiSessionEditor`: virtual file + terminal-backed editor (`PiLaunchSession.kt`)
+  - `PiLauncher` / `PiTerminalRunner`: shell terminal; cwd = project base path
+  - `PiExtensionInstaller`: extracts attention extension to `<IDE system path>/piLaunch/`
+  - `PiAttentionNotificationBridge`: loopback HTTP `/notify` with token; 1s debounce; suppress when Pi tab selected and IDE active
+  - `PiTerminalFileLinkHandler`: hover/click file refs in terminal buffer
+  - `SendToPiAction` subclasses: paste path/location into Pi prompt (`PiLaunchActions.kt`)
 - **Boundaries:** no separate modules; session disposable owns terminal/handlers/notify stop.
 - **External:** Terminal plugin APIs; shells out to `pi`; HTTP only to `127.0.0.1`.
 
